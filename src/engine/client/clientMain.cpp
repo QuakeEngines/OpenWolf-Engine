@@ -2579,10 +2579,10 @@ UTF8* idClientMainSystemLocal::str_replace( StringEntry string, StringEntry subs
     /* if either substr or replacement is nullptr, duplicate string a let caller handle it */
     if ( substr == nullptr || replacement == nullptr )
     {
-        return ::_strdup( string );
+        return ::strdup( string );
     }
     
-    newstr = ::_strdup( string );
+    newstr = ::strdup( string );
     
     while ( ( tok = ::strstr( newstr, substr ) ) )
     {

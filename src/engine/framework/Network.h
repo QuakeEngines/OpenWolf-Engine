@@ -66,7 +66,7 @@ static bool	winsockInitialized = false;
 #define closesocket			close
 #define ioctlsocket			ioctl
 #define socketError			errno
-
+typedef S32 SOCKET;
 #endif
 
 #ifndef IF_NAMESIZE
