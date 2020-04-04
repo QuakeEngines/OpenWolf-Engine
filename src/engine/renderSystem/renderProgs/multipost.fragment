@@ -1,0 +1,94 @@
+uniform sampler2D u_DiffuseMap;
+uniform sampler2D u_TextureMap;
+uniform sampler2D u_ScreenDepthMap;
+
+varying vec2 var_TexCoords;
+varying vec4 var_ViewInfo; // zfar / znear, zfar
+varying vec2 var_Dimensions;
+varying vec4 var_Local0; // num_passes, 0, 0, 0
+
+#define SHARPEN_ENABLED
+//#define HDR_ENABLED
+//#define SSAO_ENABLED
+//#define GAMMA_CORRECTION_ENABLED
+
+vec2 resolution = var_Dimensions;
+vec2 vTexCoords = var_TexCoords;
+
+vec2 TEX_OFFSET = vec2(1.0 / float(var_Dimensions.x), 1.0 / float(var_Dimensions.y));
+
+vec2 KERNEL[8] = vec2[](
+	vec2(TEX_OFFSET.x, TEX_OFFSET.y),
+	vec2(0.0, TEX_OFFSET.y),
+	vec2(-TEX_OFFSET.x, TEX_OFFSET.y),
+	vec2(-TEX_OFFSET.x, 0.0),
+	vec2(-TEX_OFFSET.x, -TEX_OFFSET.y),
+	vec2(0.0, -TEX_OFFSET.y),
+	vec2(TEX_OFFSET.x, -TEX_OFFSET.y),
+	vec2(TEX_OFFSET.x, 0.0));
+
+//==============================================================================
+vec3 gammaCorrectionRgb(in vec3 gamma, in vec3 col)
+{
+	return pow(col, 1.0 / gamma);
+}
+
+//==============================================================================
+vec3 sharpen(in sampler2D tex, in vec2 texCoords)
+{
+	const float sharpenFactor = 0.25;
+
+	vec3 col = texture(tex, texCoords).rgb;
+
+	vec3 col2 = texture(tex, texCoords + KERNEL[0]).rgb;
+	for(int i = 1; i < 8; i++)
+	{
+		col2 += texture(tex, texCoords + KERNEL[i]).rgb;
+	}
+
+	return col * (8.0 * sharpenFactor + 1.0) - sharpenFactor * col2;
+}
+
+//==============================================================================
+vec3 erosion(in sampler2D tex, in vec2 texCoords)
+{
+    vec3 minValue = texture(tex, texCoords).rgb;
+
+    for (int i = 0; i < 8; i++)
+    {
+        vec3 tmpCol = textureLod(tex, texCoords + KERNEL[i], 0.0).rgb;
+        minValue = min(tmpCol, minValue);
+    }
+
+    return minValue;
+}
+
+//==============================================================================
+
+void main(void)
+{
+	vec3 fColor;
+
+#if defined(SHARPEN_ENABLED)
+	//fColor = sharpen(u_DiffuseMap, vTexCoords);
+#else
+	//fColor = texture(u_DiffuseMap, vTexCoords).rgb;
+#endif
+	fColor = erosion(u_DiffuseMap, vTexCoords);
+
+#if defined(HDR_ENABLED)
+	vec3 hdr = texture(u_TextureMap, vTexCoords).rgb;
+	fColor += hdr;
+#endif
+
+#if defined(SSAO_ENABLED)
+	float ssao = textureLod(u_ScreenDepthMap, vTexCoords.xy, 1.0).x;
+	fColor += ssao;
+#endif
+
+#if defined(GAMMA_CORRECTION_ENABLED)
+	fColor = gammaCorrectionRgb(vec3(0.9, 0.92, 0.75), fColor);
+#endif
+
+	gl_FragColor = vec4(fColor, 1.0);
+}

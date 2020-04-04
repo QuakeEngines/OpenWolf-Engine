@@ -1,0 +1,24 @@
+uniform vec3 u_DirectedLight;
+
+varying vec3 var_Normal;
+varying vec4 var_LightDirAndRadiusSq;
+
+float CalcLightAttenuation(float normDist)
+{
+	// zero light at 1.0, approximating q3 style
+	// also don't attenuate directional light
+	float attenuation = (0.5 * normDist - 1.5) + 1.0;
+	return clamp(attenuation, 0.0, 1.0);
+}
+
+void main()
+{
+	float lightDistSq = dot(var_LightDirAndRadiusSq.xyz, var_LightDirAndRadiusSq.xyz);
+	vec3  N           = normalize(var_Normal);
+	vec3  L           = var_LightDirAndRadiusSq.xyz / sqrt(lightDistSq);
+
+	float attenuation = CalcLightAttenuation(var_LightDirAndRadiusSq.w / lightDistSq);
+	float NL          = clamp(dot(N, L), 0.0, 1.0);
+
+	gl_FragColor = vec4(NL * attenuation * u_DirectedLight, 1.0);
+}
