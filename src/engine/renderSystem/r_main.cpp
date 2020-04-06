@@ -207,10 +207,6 @@ bool idRenderSystemMainLocal::CalcTangentVectors( srfVert_t* dv[3] )
         tangent[3] = ( DotProduct( nxt, bitangent ) < 0.0f ) ? -1.0f : 1.0f;
         
         idRenderSystemVaoLocal::VaoPackTangent( dv[i]->tangent, tangent );
-        
-        // debug code
-        //% Sys_FPrintf( SYS_VRB, "%d S: (%f %f %f) T: (%f %f %f)\n", i,
-        //%     stv[ i ][ 0 ], stv[ i ][ 1 ], stv[ i ][ 2 ], ttv[ i ][ 0 ], ttv[ i ][ 1 ], ttv[ i ][ 2 ] );
     }
     
     return true;
@@ -279,6 +275,7 @@ S32 idRenderSystemMainLocal::CullBox( vec3_t worldBounds[2] )
             // completely outside frustum
             return CULL_OUT;
         }
+        
         if ( r == 3 )
         {
             anyClip = true;

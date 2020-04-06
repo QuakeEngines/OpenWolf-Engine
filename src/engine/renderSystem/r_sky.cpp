@@ -880,29 +880,36 @@ idRenderSystemSkyLocal::DrawSun
 */
 void idRenderSystemSkyLocal::DrawSun( F32 scale, shader_t* shader )
 {
-#if 0
-    F32		size;
-    F32		dist;
-    vec3_t		origin, vec1, vec2;
+    F32 size, dist;
+    vec3_t origin, vec1, vec2;
+    U8 sunColor[4] = { 255, 255, 255, 255 };
+    
+    if ( !shader )
+    {
+        return;
+    }
     
     if ( !backEnd.skyRenderedThisView )
     {
         return;
     }
     
-    //qglLoadMatrixf( backEnd.viewParms.world.modelMatrix );
-    //qglTranslatef (backEnd.viewParms.orientation.origin[0], backEnd.viewParms.orientation.origin[1], backEnd.viewParms.orientation.origin[2]);
     {
         // FIXME: this could be a lot cleaner
         mat4_t translation, modelview;
         
-        Mat4Translation( backEnd.viewParms.orientation.origin, translation );
+        idRenderSystemMathsLocal::Mat4Translation( backEnd.viewParms.orientation.origin, translation );
         idRenderSystemMathsLocal::Mat4Multiply( backEnd.viewParms.world.modelMatrix, translation, modelview );
         idRenderSystemBackendLocal::SetModelviewMatrix( modelview );
     }
     
-    dist = 	backEnd.viewParms.zFar / 1.75;		// div sqrt(3)
+    dist =	( F32 )( backEnd.viewParms.zFar / 1.75 );
     size = dist * scale;
+    
+    if ( r_proceduralSun->integer )
+    {
+        size *= r_proceduralSunScale->value;
+    }
     
     VectorScale( tr.sunDirection, dist, origin );
     PerpendicularVector( vec1, tr.sunDirection );
@@ -914,15 +921,14 @@ void idRenderSystemSkyLocal::DrawSun( F32 scale, shader_t* shader )
     // farthest depth range
     qglDepthRange( 1.0, 1.0 );
     
-    RB_BeginSurface( shader, 0, 0 );
+    idRenderSystemShadeLocal::BeginSurface( shader, 0, 0 );
     
-    RB_AddQuadStamp( origin, vec1, vec2, colorWhite );
+    idRenderSystemSurfaceLocal::AddQuadStamp( origin, vec1, vec2, tr.refdef.sunAmbCol );
     
-    RB_EndSurface();
+    idRenderSystemShadeLocal::EndSurface();
     
     // back to normal depth range
     qglDepthRange( 0.0, 1.0 );
-#endif
 }
 
 /*

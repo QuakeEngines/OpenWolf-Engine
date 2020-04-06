@@ -58,7 +58,7 @@ typedef enum cvar_flags_s
     CVAR_INIT                      = BIT( 4 ),    // don't allow change from console at all,
     // but can be set from the command line
     CVAR_LATCH                     = BIT( 5 ),    // will only change when C code next does
-    // a Cvar_Get(), so it can't be changed
+    // a idCVarSystem::Get(), so it can't be changed
     // without proper initialization.  modified
     // will be set, even though the value hasn't
     // changed yet

@@ -889,6 +889,7 @@ void idRenderSystemLocal::UploadCinematic( S32 w, S32 h, S32 cols, S32 rows, con
     {
         tr.scratchImage[client]->width = tr.scratchImage[client]->uploadWidth = cols;
         tr.scratchImage[client]->height = tr.scratchImage[client]->uploadHeight = rows;
+        
         qglTextureImage2DEXT( texture, GL_TEXTURE_2D, 0, GL_RGB8, cols, rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
         qglTextureParameterfEXT( texture, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
         qglTextureParameterfEXT( texture, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -949,6 +950,7 @@ const void* idRenderSystemBackendLocal::StretchPic( const void* data )
         {
             idRenderSystemShadeLocal::EndSurface();
         }
+        
         backEnd.currentEntity = &backEnd.entity2D;
         idRenderSystemShadeLocal::BeginSurface( shader, 0, 0 );
     }

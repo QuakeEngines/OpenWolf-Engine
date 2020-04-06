@@ -1538,6 +1538,15 @@ void idRenderSystemShadeLocal::IterateStagesGeneric( shaderCommands_t* input )
             idRenderSystemGLSLLocal::SetUniformFloat( sp, UNIFORM_TIME, ( F32 )tess.shaderTime );
         }
         
+        if ( r_proceduralSun->integer && tess.shader == tr.sunShader )
+        {
+            // Special case for procedural sun...
+            sp = &tr.sunPassShader;
+            idRenderSystemGLSLLocal::BindProgram( sp );
+            
+            idRenderSystemGLSLLocal::SetUniformFloat( sp, UNIFORM_TIME, ( F32 )tess.shaderTime );
+        }
+        
         SetMaterialBasedProperties( sp, pStage );
         
         idRenderSystemGLSLLocal::BindProgram( sp );

@@ -2141,6 +2141,24 @@ void idRenderSystemGLSLLocal::InitGPUShaders( void )
     
     numEtcShaders++;
     
+    /////////////////////////////////////////////////////////////////////////////
+    attribs = ATTR_POSITION | ATTR_COLOR | ATTR_NORMAL | ATTR_TANGENT | ATTR_LIGHTDIRECTION | ATTR_POSITION2 | ATTR_NORMAL2 | ATTR_TANGENT2;
+    extradefines[0] = '\0';
+    
+    if ( !InitGPUShader( &tr.sunPassShader, "sun", attribs, true, extradefines, true ) )
+    {
+        Com_Error( ERR_FATAL, "Could not load water shader!" );
+    }
+    
+    InitUniforms( &tr.sunPassShader );
+    SetUniformInt( &tr.sunPassShader, UNIFORM_DIFFUSEMAP, TB_DIFFUSEMAP );
+    
+#ifdef _DEBUG
+    FinishGPUShader( &tr.sunPassShader );
+#endif
+    
+    numEtcShaders++;
+    
     endTime = clientMainSystem->ScaledMilliseconds();
     
     clientMainSystem->RefPrintf( PRINT_ALL, "loaded %i GLSL shaders (%i gen %i light %i etc) in %5.2f seconds\n",
@@ -2232,6 +2250,7 @@ void idRenderSystemGLSLLocal::ShutdownGPUShaders( void )
     DeleteGPUShader( &tr.ssgiBlurShader );
     DeleteGPUShader( &tr.prefilterEnvMapShader );
     DeleteGPUShader( &tr.waterShader );
+    DeleteGPUShader( &tr.sunPassShader );
 }
 
 void idRenderSystemGLSLLocal::BindProgram( shaderProgram_t* program )

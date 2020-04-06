@@ -4529,8 +4529,6 @@ void idRenderSystemShaderLocal::CreateExternalShaders( void )
         }
     }
     
-    tr.sunShader = FindShader( "sun", LIGHTMAP_NONE, true );
-    
     tr.sunFlareShader = FindShader( "gfx/2d/sunflare", LIGHTMAP_NONE, true );
     
     // HACK: if sunflare is missing, make one using the flare image or dlight image
@@ -4552,9 +4550,11 @@ void idRenderSystemShaderLocal::CreateExternalShaders( void )
         stages[0].bundle[0].image[0] = image;
         stages[0].active = true;
         stages[0].stateBits = GLS_DEFAULT;
+        
         tr.sunFlareShader = FinishShader();
     }
     
+    tr.sunShader = FindShader( "sun", LIGHTMAP_NONE, true );
 }
 
 /*

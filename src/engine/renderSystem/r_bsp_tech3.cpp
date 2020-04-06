@@ -3480,8 +3480,6 @@ void idRenderSystemLocal::LoadWorld( StringEntry name )
     tr.sunDirection[1] = 0.3f;
     tr.sunDirection[2] = 0.9f;
     
-    tr.sunShader = nullptr;
-    
     VectorNormalize( tr.sunDirection );
     
     // set default autoexposure settings
@@ -3521,12 +3519,12 @@ void idRenderSystemLocal::LoadWorld( StringEntry name )
     fileBase = ( U8* )header;
     
     i = LittleLong( header->version );
-#if 0
+    
     if ( i != BSP_VERSION )
     {
         Com_Error( ERR_DROP, "idRenderSystemLocal::LoadWorldMap: %s has wrong version number (%i should be %i)", name, i, BSP_VERSION );
     }
-#endif
+    
     // swap all the lumps
     for ( i = 0; i < sizeof( dheader_t ) / 4; i++ )
     {

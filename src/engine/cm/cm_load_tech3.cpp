@@ -1190,12 +1190,11 @@ void idCollisionModelManagerLocal::LoadMap( StringEntry name, bool clientload, S
         ( ( S32* )&header )[i] = LittleLong( ( ( S32* )&header )[i] );
     }
     
-#if 0
     if ( header.version != BSP_VERSION )
     {
         Com_Error( ERR_DROP, "idCollisionModelManagerLocal::LoadMap: %s has wrong version number (%i should be %i)", name, header.version, BSP_VERSION );
     }
-#endif
+    
     cmod_base = ( U8* ) buf;
     
     // load into heap

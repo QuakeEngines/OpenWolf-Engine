@@ -111,7 +111,6 @@ vec3 textureDistorted(
 
 void main()
 {
-	//vec3 fColor;
 	vec3 fColor = texture(u_DiffuseMap, var_TexCoords).rgb;
 
 	vec2 texcoord = -vTexCoords + vec2(1.0);

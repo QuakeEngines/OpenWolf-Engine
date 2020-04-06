@@ -1705,6 +1705,7 @@ typedef struct
     shaderProgram_t prefilterEnvMapShader;
     shaderProgram_t waterShader;
     shaderProgram_t underWaterShader;
+    shaderProgram_t sunPassShader;
     
     image_t*        bloomRenderFBOImage[3];
     image_t*        anamorphicRenderFBOImage[3];
@@ -1985,6 +1986,8 @@ extern convar_t* r_ssr;
 extern convar_t* r_ssrStrength;
 extern convar_t* r_sse;
 extern convar_t* r_sseStrength;
+extern convar_t* r_proceduralSun;
+extern convar_t* r_proceduralSunScale;
 
 //====================================================================
 
