@@ -111,6 +111,7 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <setjmp.h>
 #endif
 
 #ifdef _WIN32

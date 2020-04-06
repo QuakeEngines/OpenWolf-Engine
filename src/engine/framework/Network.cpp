@@ -1332,7 +1332,7 @@ void idNetworkSystemLocal::GetLocalAddress( void )
         
         freeifaddrs( ifap );
         
-        ShowIP();
+        networkSystemLocal.ShowIP();
     }
 }
 #else

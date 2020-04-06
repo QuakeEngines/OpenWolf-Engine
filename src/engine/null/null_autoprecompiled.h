@@ -113,6 +113,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <ifaddrs.h>
+#include <setjmp.h>
 #endif
 
 #ifdef _WIN32

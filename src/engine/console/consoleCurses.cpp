@@ -142,8 +142,8 @@ idConsoleCursesLocal::ColorPrint
 */
 void idConsoleCursesLocal::ColorPrint( WINDOW* win, StringEntry msg, bool stripcodes )
 {
+    static UTF8 buffer[MAXPRINTMSG];
     S32 length = 0;
-    static wchar_t buffer[MAXPRINTMSG];
     
     SetColor( win, 7 );
     
@@ -155,7 +155,7 @@ void idConsoleCursesLocal::ColorPrint( WINDOW* win, StringEntry msg, bool stripc
             if ( length > 0 )
             {
                 buffer[length] = '\0';
-                waddwstr( win, buffer );
+                wprintw( win, "%s", buffer );
                 length = 0;
             }
             
@@ -214,7 +214,7 @@ void idConsoleCursesLocal::ColorPrint( WINDOW* win, StringEntry msg, bool stripc
     if ( length > 0 )
     {
         buffer[length] = '\0';
-        waddwstr( win, buffer );
+        wprintw( win, "%s", buffer );
     }
 }
 
@@ -332,7 +332,7 @@ void idConsoleCursesLocal::Init( void )
 #endif
     
     // Make sure we're on a tty
-    if ( !_isatty( STDIN_FILENO ) || !_isatty( STDOUT_FILENO ) )
+    if ( !isatty( STDIN_FILENO ) || !isatty( STDOUT_FILENO ) )
     {
         Init();
         return;

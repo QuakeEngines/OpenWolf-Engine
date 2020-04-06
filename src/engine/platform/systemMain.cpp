@@ -649,10 +649,10 @@ void idSystemLocal::SysSnapVector( F32* v )
 main
 =================
 */
-#if defined (__LINUX__)
-extern "C" S32 engineMain( S32 argc, UTF8 * *argv )
-#elif defined (DEDICATED)
+#if defined (DEDICATED)
 S32 main( S32 argc, UTF8 * *argv )
+#elif defined (__LINUX__)
+extern "C" S32 engineMain( S32 argc, UTF8 * *argv )
 #else
 Q_EXPORT S32 engineMain( S32 argc, UTF8** argv )
 #endif

@@ -962,7 +962,7 @@ void idCVarSystemLocal::Set_f( void )
     }
     
     // 3rd arg onwards, raw
-    value = ::_strdup( cmdSystem->FromNth( 2 ) );
+    value = ::strdup( cmdSystem->FromNth( 2 ) );
     
     if ( unsafe )
     {
