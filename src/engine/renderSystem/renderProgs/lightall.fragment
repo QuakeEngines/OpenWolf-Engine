@@ -189,9 +189,9 @@ float LightRay(vec2 dp, vec2 ds, sampler2D normalMap)
 }
 #endif
  
-vec3 CalcDiffuse(vec3 diffuseAlbedo, vec3 fresnel, float roughness, float ao)
+vec3 CalcDiffuse(vec3 diffuseAlbedo, float NH, float EH, float roughness)
 {
-	return diffuseAlbedo * (vec3(1.0) - fresnel, ao);
+	return diffuseAlbedo * M_PI;
 }
 
 vec2 GetParallaxOffset(in vec2 texCoords, in vec3 E, in mat3 tangentToWorld )
@@ -236,11 +236,10 @@ float spec_G(float NL, float NE, float roughness )
   return G1(NL,k)*G1(NE,k);
 }
 
-vec3 CalcSpecular( vec3 specular, float NH, float NL, float NE, vec3  fresnel, float roughness
-)
+vec3 CalcSpecular( vec3 specular, float NH, float NL, float NE, float EH, float roughness )
 {
 	float distrib = spec_D(NH,roughness);
-	//vec3 fresnel = spec_F(EH,specular);
+	vec3 fresnel = spec_F(EH,specular);
 	float vis = spec_G(NL, NE, roughness);
 	float denominator = max((4.0 * max(NE,0.0) * max(NL,0.0)),0.001);
 	return (distrib * fresnel * vis) / denominator;
@@ -354,7 +353,7 @@ void main()
   #endif
 	float sqrLightDist = dot(L, L);
 	L /= sqrt(sqrLightDist);
-
+	
 	float factor = 1.0;
 	#if defined(USE_PBR)
 		// smooth out distance attenuation for dynamic lights
@@ -387,20 +386,12 @@ void main()
 
 	// surfaces not facing the light are always shadowed
 	shadowValue *= clamp(dot(N, var_PrimaryLightDir.xyz), 0.0, 1.0);
-	
-    #if defined(SHADOWMAP_MODULATE)
-	vec3 shadowColor = u_PrimaryLightAmbient * lightColor;
 
+    #if defined(SHADOWMAP_MODULATE)
 	lightColor *= shadowValue * (1.0 - u_PrimaryLightAmbient.r) + u_PrimaryLightAmbient.r;
-	
-    #if 0
-	// Only shadow when the world light is parallel to the primary light
-	shadowValue = 1.0 + (shadowValue - 1.0) * clamp(dot(L, var_PrimaryLightDir.xyz), 0.0, 1.0);
-    #endif
-	lightColor = mix(shadowColor, lightColor, shadowValue);
     #endif
   #endif
-
+  
   #if defined(USE_PARALLAXMAP) && defined(USE_PARALLAXMAP_SHADOWS)
 	offsetDir = L * tangentToWorld;
 	offsetDir.xy *= u_NormalScale.a / offsetDir.z;
@@ -410,7 +401,6 @@ void main()
   #if !defined(USE_LIGHT_VECTOR)
 	ambientColor = lightColor;
 	float surfNL = clamp(dot(var_Normal.xyz, L), 0.0, 1.0);
-	//float surfNL = clamp(-dot(var_PrimaryLightDir.xyz, var_Normal.xyz), 0.0, 1.0);
 
 	// reserve 25% ambient to avoid black areas on normalmaps
 	lightColor *= 0.75;
@@ -469,18 +459,15 @@ void main()
   
 #if defined(USE_PBR)
 	diffuse.rgb *= diffuse.rgb;
-	specular.rgb *= specular.rgb;
+	//specular.rgb *= specular.rgb;
 #endif
 
-	float ao = 1.0;
   #if defined(USE_PBR)
 	// diffuse rgb is base color
 	// specular red is gloss
 	// specular green is metallicness
-	// specular blue is ao
 	float gloss		= specular.r;
 	float metal		= specular.g;
-	ao				= specular.b;
 	specular.rgb	= metal * diffuse.rgb + vec3(0.04 - 0.04 * metal);
 	diffuse.rgb    *= 1.0 - metal;
   #else
@@ -503,10 +490,7 @@ void main()
 	float roughness = pow(2.0 / (8190.0 * gloss + 2.0), 0.25);
   #endif
   
-   	vec3 fresnel = spec_F(EH, specular.rgb);
-  
-	vec3 Fd = CalcDiffuse(diffuse.rgb,fresnel, roughness, ao);
-	vec3 Fs = vec3(0.0);
+	reflectance = CalcDiffuse(diffuse.rgb, NH, EH, roughness);
 
   #if defined(USE_LIGHT_VECTOR) || defined(USE_DELUXEMAP)
     H  = normalize(L + E);
@@ -516,21 +500,21 @@ void main()
     NH = max(1e-8, dot(N, H));
     NE = abs(dot(N, E)) + 1e-5;
 
-  #if defined(USE_LIGHTMAP) && defined(USE_DELUXEMAP) && defined (r_deluxeSpecular)
-	NH = clamp(dot(N, H), 0.0, 1.0);
-
-	Fs += CalcSpecular(specular.rgb, NH, NL, NE, fresnel, roughness) * r_deluxeSpecular;
+  #if defined(r_deluxeSpecular)
+    #if defined(USE_LIGHT_VECTOR)
+		reflectance += CalcSpecular(specular.rgb, NH, NL, NE, EH, roughness) * r_deluxeSpecular;
+    #else
+		reflectance += CalcSpecular(specular.rgb, NH, NL, NE, EH, pow(roughness, r_deluxeSpecular));
+    #endif
   #endif
   #endif
-  
-	reflectance = Fd + Fs;
-  
+   
 	gl_FragColor.rgb = lightColor * reflectance * (attenuation * NL);
 	gl_FragColor.rgb += ambientColor * diffuse.rgb;
 	
   #if defined(USE_CUBEMAP)
 	NE = abs(dot(N, E)) + 1e-5;
-	vec3 EnvBRDF = texture(u_EnvBrdfMap, vec2(roughness, NE)).rgb;
+	vec3 EnvBRDF = texture(u_EnvBrdfMap, vec2(1.0 - roughness, NE)).rgb;
 
 	vec3 R = reflect(E, N);
 	
@@ -570,21 +554,15 @@ void main()
     EH2 = max(1e-8, dot(E, H2));
     NH2 = max(1e-8, dot(N, H2));
 	
-	vec3 fresnel2 = spec_F(EH2, specular.rgb);
-	
-	reflectance = CalcSpecular(specular.rgb, NH2, NL2, NE, fresnel2, roughness);
+	reflectance = CalcSpecular(specular.rgb, NH2, NL2, NE, EH2, roughness);
 
 	// bit of a hack, with modulated shadowmaps, ignore diffuse
     #if !defined(SHADOWMAP_MODULATE)
-	reflectance += CalcDiffuse(diffuse.rgb, fresnel2, roughness, 1.0);
+	reflectance += CalcDiffuse(diffuse.rgb, NH2, EH2, roughness);
     #endif
 
-	lightColor = u_PrimaryLightColor * var_Color.rgb;
+	lightColor = u_PrimaryLightColor;
 
-	#if defined(USE_PBR)
-		lightColor = pow(lightColor, vec3(2.2));
-	#endif
-	
     #if defined(USE_SHADOWMAP)
 	lightColor *= shadowValue;
     #endif
@@ -605,8 +583,6 @@ void main()
 	gl_FragColor.rgb = sqrt(gl_FragColor.rgb);
   #endif
 
-  gl_FragColor.a = alpha;
-  
 #else
   lightColor = var_Color.rgb;
 
