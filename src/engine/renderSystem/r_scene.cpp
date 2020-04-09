@@ -559,17 +559,15 @@ void idRenderSystemLocal::RenderScene( const refdef_t* fd )
             idRenderSystemMainLocal::RenderSunShadowMaps( fd, 0 );
             idRenderSystemMainLocal::RenderSunShadowMaps( fd, 1 );
             idRenderSystemMainLocal::RenderSunShadowMaps( fd, 2 );
-            idRenderSystemMainLocal::RenderSunShadowMaps( fd, 3 );
         }
         else
         {
             idRenderSystemMathsLocal::Mat4Zero( tr.refdef.sunShadowMvp[0] );
             idRenderSystemMathsLocal::Mat4Zero( tr.refdef.sunShadowMvp[1] );
             idRenderSystemMathsLocal::Mat4Zero( tr.refdef.sunShadowMvp[2] );
-            idRenderSystemMathsLocal::Mat4Zero( tr.refdef.sunShadowMvp[3] );
         }
         
-        // only rerender last cascade if sun has changed position
+        // only render last cascade if sun has changed position
         if ( r_forceSun->integer == 2 || !VectorCompare( tr.refdef.sunDir, tr.lastCascadeSunDirection ) )
         {
             VectorCopy( tr.refdef.sunDir, tr.lastCascadeSunDirection );
