@@ -3520,10 +3520,12 @@ void idRenderSystemLocal::LoadWorld( StringEntry name )
     
     i = LittleLong( header->version );
     
+#if 0
     if ( i != BSP_VERSION )
     {
         Com_Error( ERR_DROP, "idRenderSystemLocal::LoadWorldMap: %s has wrong version number (%i should be %i)", name, i, BSP_VERSION );
     }
+#endif
     
     // swap all the lumps
     for ( i = 0; i < sizeof( dheader_t ) / 4; i++ )
