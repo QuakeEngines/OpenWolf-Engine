@@ -766,7 +766,7 @@ void idServerInitSystemLocal::SpawnServer( UTF8* server, bool killBots )
     // Arnout: just always use it
     if ( !serverGameSystem->GameIsSinglePlayer() )
     {
-        SetExpectedHunkUsage( va( "maps/%s.world", server ) );
+        SetExpectedHunkUsage( va( "maps/%s.bsp", server ) );
     }
     else
     {
@@ -787,7 +787,7 @@ void idServerInitSystemLocal::SpawnServer( UTF8* server, bool killBots )
     
     fileSystem->Restart( sv.checksumFeed );
     
-    collisionModelManager->LoadMap( va( "maps/%s.world", server ), false, &checksum );
+    collisionModelManager->LoadMap( va( "maps/%s.bsp", server ), false, &checksum );
     
     // set serverinfo visible name
     cvarSystem->Set( "mapname", server );

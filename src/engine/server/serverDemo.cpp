@@ -417,7 +417,7 @@ void idServerDemoSystemLocal::DemoStartPlayback( void )
         return;
     }
     s = MSG_ReadString( &msg );
-    if ( !fileSystem->FOpenFileRead( va( "maps/%s.world", s ), nullptr, false ) )
+    if ( !fileSystem->FOpenFileRead( va( "maps/%s.bsp", s ), nullptr, false ) )
     {
         Com_Printf( "Map does not exist: %s.\n", s );
         DemoStopPlayback();

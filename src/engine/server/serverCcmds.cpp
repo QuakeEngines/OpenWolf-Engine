@@ -265,7 +265,7 @@ void idServerCcmdsSystemLocal::Map_f( void )
         return;
     }
     
-    Q_snprintf( expanded, sizeof( expanded ), "maps/%s.world", map );
+    Q_snprintf( expanded, sizeof( expanded ), "maps/%s.bsp", map );
     
     if ( fileSystem->ReadFile( expanded, nullptr ) == -1 )
     {
@@ -1092,7 +1092,7 @@ void idServerCcmdsSystemLocal::CompleteMapName( UTF8* args, S32 argNum )
 {
     if ( argNum == 2 )
     {
-        Field_CompleteFilename( "maps", "world", true );
+        Field_CompleteFilename( "maps", "bsp", true );
     }
 }
 

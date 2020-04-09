@@ -880,7 +880,7 @@ void idClientGameSystemLocal::InitCGame( void )
     // find the current mapname
     info = cl.gameState.stringData + cl.gameState.stringOffsets[CS_SERVERINFO];
     mapname = Info_ValueForKey( info, "mapname" );
-    Q_snprintf( cl.mapname, sizeof( cl.mapname ), "maps/%s.world", mapname );
+    Q_snprintf( cl.mapname, sizeof( cl.mapname ), "maps/%s.bsp", mapname );
     
     // load the dll
     cgvm = idsystem->LoadDll( "cgame" );
