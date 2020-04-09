@@ -1277,7 +1277,7 @@ void idRenderSystemInitLocal::Register( void )
     r_greyscale = cvarSystem->Get( "r_greyscale", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     cvarSystem->CheckRange( r_greyscale, 0, 1, false );
     
-    r_hdr = cvarSystem->Get( "r_hdr", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
+    r_hdr = cvarSystem->Get( "r_hdr", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_truehdr = cvarSystem->Get( "r_truehdr", "1", CVAR_ARCHIVE, "description" );
     r_floatLightmap = cvarSystem->Get( "r_floatLightmap", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_postProcess = cvarSystem->Get( "r_postProcess", "1", CVAR_ARCHIVE, "description" );
@@ -1354,7 +1354,7 @@ void idRenderSystemInitLocal::Register( void )
     r_ignoreGLErrors = cvarSystem->Get( "r_ignoreGLErrors", "1", CVAR_ARCHIVE, "description" );
     r_fastsky = cvarSystem->Get( "r_fastsky", "0", CVAR_ARCHIVE, "description" );
     r_inGameVideo = cvarSystem->Get( "r_inGameVideo", "1", CVAR_ARCHIVE, "description" );
-    r_drawSun = cvarSystem->Get( "r_drawSun", "0", CVAR_ARCHIVE, "description" );
+    r_drawSun = cvarSystem->Get( "r_drawSun", "1", CVAR_ARCHIVE, "description" );
     r_dynamiclight = cvarSystem->Get( "r_dynamiclight", "1", CVAR_ARCHIVE, "description" );
     r_finish = cvarSystem->Get( "r_finish", "0", CVAR_ARCHIVE, "description" );
     r_textureMode = cvarSystem->Get( "r_textureMode", "GL_LINEAR_MIPMAP_LINEAR", CVAR_ARCHIVE, "description" );
@@ -1442,7 +1442,7 @@ void idRenderSystemInitLocal::Register( void )
     r_trueAnaglyphRed = cvarSystem->Get( "r_trueAnaglyphRed", "0.0", CVAR_ARCHIVE, "description" );
     r_trueAnaglyphGreen = cvarSystem->Get( "r_trueAnaglyphGreen", "0.0", CVAR_ARCHIVE, "description" );
     r_trueAnaglyphBlue = cvarSystem->Get( "r_trueAnaglyphBlue", "0.0", CVAR_ARCHIVE, "description" );
-    r_vibrancy = cvarSystem->Get( "r_vibrancy", "2.04", CVAR_ARCHIVE, "description" );
+    r_vibrancy = cvarSystem->Get( "r_vibrancy", "1.04", CVAR_ARCHIVE, "description" );
     r_bloom = cvarSystem->Get( "r_bloom", "0", CVAR_ARCHIVE, "description" );
     r_bloomPasses = cvarSystem->Get( "r_bloomPasses", "2", CVAR_ARCHIVE, "description" );
     r_bloomDarkenPower = cvarSystem->Get( "r_bloomDarkenPower", "6.5", CVAR_ARCHIVE, "description" );
@@ -1456,7 +1456,7 @@ void idRenderSystemInitLocal::Register( void )
     r_brightness = cvarSystem->Get( "r_brightness", "0.0", CVAR_ARCHIVE, "description" );
     r_contrast = cvarSystem->Get( "r_contrast", "1.0", CVAR_ARCHIVE, "description" );
     r_gamma = cvarSystem->Get( "r_gamma", "1.0", CVAR_ARCHIVE, "description" );
-    r_proceduralSun = cvarSystem->Get( "r_proceduralSun", "1", CVAR_ARCHIVE, "description" );
+    r_proceduralSun = cvarSystem->Get( "r_proceduralSun", "0", CVAR_ARCHIVE, "description" );
     r_proceduralSunScale = cvarSystem->Get( "r_proceduralSunScale", "1.75", CVAR_ARCHIVE, "description" );
     
     r_maxpolys = cvarSystem->Get( "r_maxpolys", va( "%d", MAX_POLYS ), 0, "description" );
