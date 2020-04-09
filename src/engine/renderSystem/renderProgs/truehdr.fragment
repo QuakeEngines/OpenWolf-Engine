@@ -39,8 +39,8 @@ vec3 SexyTonemapMath(vec3 x)
 vec4 SexyTonemap(vec3 inColor)
 {
      vec3 texColor = inColor;
-     texColor *= 8.0;  // Hardcoded Exposure Adjustment
-     float ExposureBias = 0.5;
+     texColor *= 5.0;  // Hardcoded Exposure Adjustment
+     float ExposureBias = 1.00;
      vec3 curr = SexyTonemapMath(texColor * ExposureBias);
      vec3 whiteScale = vec3(1.0) / SexyTonemapMath( vec3(W) );
      vec3 color = curr * whiteScale;
@@ -56,7 +56,7 @@ void main()
 
 	Fragment frag;
 	frag.color = color.rgb;
-	frag.gamma = 1.00;
+	frag.gamma = 0.8;
 	
 	gl_FragColor = SexyTonemap(newHDR(frag));
 	gl_FragColor.rgb = ((clamp(gl_FragColor.rgb - const_1, 0.0, 1.0)) * const_2);
