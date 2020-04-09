@@ -63,7 +63,7 @@ idMemorySystemLocal::~idMemorySystemLocal( void )
 {
 }
 
-//qmutex_t* zone_mutex = nullptr;
+qmutex_t* zone_mutex = nullptr;
 
 /*
 ========================
@@ -116,7 +116,7 @@ void idMemorySystemLocal::Free( void* ptr )
         Com_Error( ERR_FATAL, "idMemorySystemLocal::Free: freed a freed pointer" );
     }
     
-    //threadsSystem->Mutex_Lock( zone_mutex );
+    threadsSystem->Mutex_Lock( zone_mutex );
     
     // if static memory
     if ( block->tag == TAG_STATIC )
@@ -176,7 +176,7 @@ void idMemorySystemLocal::Free( void* ptr )
         block->next->prev = block;
     }
     
-    //threadsSystem->Mutex_Unlock( zone_mutex );
+    threadsSystem->Mutex_Unlock( zone_mutex );
 }
 
 /*
@@ -227,7 +227,7 @@ void* idMemorySystemLocal::TagMalloc( size_t size, memtag_t tag )
     memblock_t* start, *rover, *_new, *base;
     memzone_t* zone;
     
-    //threadsSystem->Mutex_Lock( zone_mutex );
+    threadsSystem->Mutex_Lock( zone_mutex );
     
     if ( !tag )
     {
@@ -307,7 +307,7 @@ void* idMemorySystemLocal::TagMalloc( size_t size, memtag_t tag )
     // marker for memory trash testing
     *( S32* )( ( U8* ) base + base->size - 4 ) = ZONEID;
     
-    //threadsSystem->Mutex_Unlock( zone_mutex );
+    threadsSystem->Mutex_Unlock( zone_mutex );
     
     return ( void* )( ( U8* ) base + sizeof( memblock_t ) );
 }
@@ -616,7 +616,7 @@ void idMemorySystemLocal::InitSmallZoneMemory( void )
 {
     s_smallZoneTotal = 512 * 1024;
     
-    //zone_mutex = ( qmutex_t* )threadsSystem->Mutex_Create();
+    zone_mutex = ( qmutex_t* )threadsSystem->Mutex_Create();
     
     // bk001205 - was malloc
     smallzone = ( memzone_t* )calloc( s_smallZoneTotal, 1 );
@@ -1005,7 +1005,7 @@ idMemorySystemLocal::Shutdown
 */
 void idMemorySystemLocal::Shutdown( void )
 {
-    //threadsSystem->Mutex_Destroy( &zone_mutex );
+    threadsSystem->Mutex_Destroy( &zone_mutex );
 }
 
 /*
