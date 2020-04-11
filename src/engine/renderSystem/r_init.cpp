@@ -1258,7 +1258,7 @@ void idRenderSystemInitLocal::Register( void )
     r_texturebits = cvarSystem->Get( "r_texturebits", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_colorbits = cvarSystem->Get( "r_colorbits", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_stencilbits = cvarSystem->Get( "r_stencilbits", "8", CVAR_ARCHIVE | CVAR_LATCH, "description" );
-    r_depthbits = cvarSystem->Get( "r_depthbits", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
+    r_depthbits = cvarSystem->Get( "r_depthbits", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_ext_multisample = cvarSystem->Get( "r_ext_multisample", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     cvarSystem->CheckRange( r_ext_multisample, 0, 4, true );
     r_overBrightBits = cvarSystem->Get( "r_overBrightBits", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
@@ -1295,7 +1295,7 @@ void idRenderSystemInitLocal::Register( void )
     
     r_cameraExposure = cvarSystem->Get( "r_cameraExposure", "0", CVAR_CHEAT, "description" );
     
-    r_depthPrepass = cvarSystem->Get( "r_depthPrepass", "0", CVAR_ARCHIVE, "description" );
+    r_depthPrepass = cvarSystem->Get( "r_depthPrepass", "1", CVAR_ARCHIVE, "description" );
     r_ssao = cvarSystem->Get( "r_ssao", "0", CVAR_LATCH | CVAR_ARCHIVE, "description" );
     
     r_normalMapping = cvarSystem->Get( "r_normalMapping", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
@@ -1316,7 +1316,7 @@ void idRenderSystemInitLocal::Register( void )
     r_glossType = cvarSystem->Get( "r_glossType", "2", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_dlightMode = cvarSystem->Get( "r_dlightMode", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_pshadowDist = cvarSystem->Get( "r_pshadowDist", "128", CVAR_ARCHIVE, "description" );
-    r_mergeLightmaps = cvarSystem->Get( "r_mergeLightmaps", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
+    r_mergeLightmaps = cvarSystem->Get( "r_mergeLightmaps", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_imageUpsample = cvarSystem->Get( "r_imageUpsample", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_imageUpsampleMaxSize = cvarSystem->Get( "r_imageUpsampleMaxSize", "1024", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_imageUpsampleType = cvarSystem->Get( "r_imageUpsampleType", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
@@ -1326,7 +1326,7 @@ void idRenderSystemInitLocal::Register( void )
     r_forceSunLightScale = cvarSystem->Get( "r_forceSunLightScale", "1.0", CVAR_CHEAT, "description" );
     r_forceSunAmbientScale = cvarSystem->Get( "r_forceSunAmbientScale", "0.5", CVAR_CHEAT, "description" );
     r_drawSunRays = cvarSystem->Get( "r_drawSunRays", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
-    r_sunlightMode = cvarSystem->Get( "r_sunlightMode", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
+    r_sunlightMode = cvarSystem->Get( "r_sunlightMode", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     
     r_sunShadows = cvarSystem->Get( "r_sunShadows", "1", CVAR_ARCHIVE | CVAR_LATCH, "description" );
     r_shadowFilter = cvarSystem->Get( "r_shadowFilter", "0", CVAR_ARCHIVE | CVAR_LATCH, "description" );
