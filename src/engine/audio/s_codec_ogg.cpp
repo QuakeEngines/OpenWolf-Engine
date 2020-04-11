@@ -443,7 +443,7 @@ void* S_OGG_CodecLoad( StringEntry filename, snd_info_t* info )
     
     // allocate a buffer
     // this buffer must be free-ed by the caller of this function
-    buffer = static_cast<U8*>( memorySystem->Malloc( info->size ) );
+    buffer = static_cast<U8*>( memorySystem->AllocateTempMemory( info->size ) );
     if ( !buffer )
     {
         S_OGG_CodecCloseStream( stream );
@@ -457,7 +457,7 @@ void* S_OGG_CodecLoad( StringEntry filename, snd_info_t* info )
     // we don't even have read a single byte
     if ( bytesRead <= 0 )
     {
-        memorySystem->Free( buffer );
+        memorySystem->FreeTempMemory( buffer );
         S_OGG_CodecCloseStream( stream );
         
         return nullptr;

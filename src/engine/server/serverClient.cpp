@@ -976,15 +976,13 @@ void idServerClientSystemLocal::WWWDownload_f( client_t* cl )
     
     if ( !Q_stricmp( subcmd, "done" ) )
     {
-        cl->download = 0;
-        *cl->downloadName = 0;
+        serverClientLocal.CloseDownload( cl );
         cl->bWWWing = false;
         return;
     }
     else if ( !Q_stricmp( subcmd, "fail" ) )
     {
-        cl->download = 0;
-        *cl->downloadName = 0;
+        serverClientLocal.CloseDownload( cl );
         cl->bWWWing = false;
         cl->bFallback = true;
         
@@ -996,8 +994,7 @@ void idServerClientSystemLocal::WWWDownload_f( client_t* cl )
     {
         Com_Printf( "WARNING: client '%s' reports that the redirect download for '%s' had wrong checksum.\n", cl->name, cl->downloadName );
         Com_Printf( "         you should check your download redirect configuration.\n" );
-        cl->download = 0;
-        *cl->downloadName = 0;
+        serverClientLocal.CloseDownload( cl );
         cl->bWWWing = false;
         cl->bFallback = true;
         
@@ -1064,6 +1061,7 @@ void idServerClientSystemLocal::WriteDownloadToClient( client_t* cl, msg_t* msg 
 {
     S32 curindex, rate, blockspersnap, idPack, download_flag;
     UTF8 errorMessage[1024];
+    fileHandle_t handle = 0;
 #if defined (UPDATE_SERVER)
     S32 i;
     UTF8 testname[MAX_QPATH];
@@ -1191,7 +1189,6 @@ void idServerClientSystemLocal::WriteDownloadToClient( client_t* cl, msg_t* msg 
             {
                 if ( !cl->bFallback )
                 {
-                    fileHandle_t handle;
                     S32 downloadSize = fileSystem->SV_FOpenFileRead( cl->downloadName, &handle );
                     
                     if ( downloadSize )
@@ -1239,6 +1236,7 @@ void idServerClientSystemLocal::WriteDownloadToClient( client_t* cl, msg_t* msg 
                     
                     if ( CheckFallbackURL( cl, msg ) )
                     {
+                        fileSystem->FCloseFile( handle );
                         return;
                     }
                     
@@ -1249,14 +1247,17 @@ void idServerClientSystemLocal::WriteDownloadToClient( client_t* cl, msg_t* msg 
             {
                 if ( CheckFallbackURL( cl, msg ) )
                 {
+                    fileSystem->FCloseFile( handle );
                     return;
                 }
+                
                 Com_Printf( "Client '%s' is not configured for www download\n", cl->name );
             }
         }
         
         // find file
         cl->bWWWDl = false;
+        cl->download = handle;
         cl->downloadSize = fileSystem->SV_FOpenFileRead( cl->downloadName, &cl->download );
         
         if ( cl->downloadSize <= 0 )

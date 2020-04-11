@@ -239,7 +239,7 @@ void* S_WAV_CodecLoad( StringEntry filename, snd_info_t* info )
     }
     
     // Allocate some memory
-    buffer = memorySystem->Malloc( info->size );
+    buffer = memorySystem->AllocateTempMemory( info->size );
     if ( !buffer )
     {
         fileSystem->FCloseFile( file );

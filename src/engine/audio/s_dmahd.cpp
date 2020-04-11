@@ -523,7 +523,7 @@ bool dmaHD_LoadSound( sfx_t* sfx )
     dmaHD_ResampleSfx( sfx, info.channels, info.rate, info.width, data + info.dataofs, false );
     
     // Free data allocated by Codec
-    memorySystem->Free( data );
+    memorySystem->FreeTempMemory( data );
     
     return true;
 }

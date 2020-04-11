@@ -74,6 +74,12 @@ redo:
     return v;
 }
 
+void SND_shutdown( void )
+{
+    free( sfxScratchBuffer );
+    free( buffer );
+}
+
 void SND_setup( void )
 {
     sndBuffer* p, *q;
@@ -296,7 +302,7 @@ bool S_LoadSound( sfx_t* sfx )
     sfx->soundChannels = info.channels;
     
     memorySystem->FreeTempMemory( samples );
-    memorySystem->Free( data );
+    memorySystem->FreeTempMemory( data );
     
     return true;
 }
