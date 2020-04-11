@@ -1632,7 +1632,7 @@ void Com_GetGameInfo( void )
 bool Com_CheckProfile( UTF8* profile_path )
 {
     fileHandle_t    f;
-    UTF8            f_data[32];
+    UTF8            f_data[32] = { 0 };
     S32             f_pid;
     
     //let user override this
@@ -2524,7 +2524,6 @@ void Com_Shutdown( bool badProfile )
         com_logfile->integer = 0;//don't open up the log file again!!
     }
     
-    
     // write config file if anything changed
     Com_WriteConfiguration();
     
@@ -2843,10 +2842,8 @@ void Field_CompleteCommand( UTF8* cmd, bool doCommands, bool doCvars )
         completionArgument++;
     }
     else
-    {
         completionString = cmdSystem->Argv( completionArgument - 1 );
-    }
-    
+        
 #ifndef DEDICATED
     // Unconditionally add a '\' to the start of the buffer
     if ( completionField->buffer[ 0 ] &&
@@ -2886,29 +2883,32 @@ void Field_CompleteCommand( UTF8* cmd, bool doCommands, bool doCvars )
     }
     else
     {
-        if ( completionString[0] == '\\' || completionString[0] == '/' )
-            completionString++;
-            
-        matchCount = 0;
-        shortestMatch[ 0 ] = 0;
-        
-        if ( strlen( completionString ) == 0 )
-            return;
-            
-        if ( doCommands )
-            cmdSystem->CommandCompletion( FindMatches );
-            
-        if ( doCvars )
-            cvarSystem->CommandCompletion( FindMatches );
-            
-        if ( !Field_Complete( ) )
+        if ( completionString )
         {
-            // run through again, printing matches
+            if ( completionString[0] == '\\' || completionString[0] == '/' )
+                completionString++;
+                
+            matchCount = 0;
+            shortestMatch[0] = 0;
+            
+            if ( strlen( completionString ) == 0 )
+                return;
+                
             if ( doCommands )
-                cmdSystem->CommandCompletion( PrintMatches );
+                cmdSystem->CommandCompletion( FindMatches );
                 
             if ( doCvars )
-                cvarSystem->CommandCompletion( PrintCvarMatches );
+                cvarSystem->CommandCompletion( FindMatches );
+                
+            if ( !Field_Complete() )
+            {
+                // run through again, printing matches
+                if ( doCommands )
+                    cmdSystem->CommandCompletion( PrintMatches );
+                    
+                if ( doCvars )
+                    cvarSystem->CommandCompletion( PrintCvarMatches );
+            }
         }
     }
 }
