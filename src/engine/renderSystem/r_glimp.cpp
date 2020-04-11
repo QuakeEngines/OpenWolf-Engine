@@ -562,7 +562,12 @@ S32 idRenderSystemGlimpLocal::SetMode( S32 mode, bool fullscreen, bool noborder,
                     }
                     break;
                 case 1:
-                    if ( depthBits == 24 )
+                    if ( depthBits == 32 )
+                    {
+                        depthBits = 24;
+                    }
+                    else if ( depthBits == 24 )
+                    
                     {
                         depthBits = 16;
                     }
