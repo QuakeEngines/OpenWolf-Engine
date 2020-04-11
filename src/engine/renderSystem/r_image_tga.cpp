@@ -90,6 +90,7 @@ void idRenderSystemImageTGALocal::LoadTGA( StringEntry name, U8** pic, S32* widt
     
     if ( length < 18 )
     {
+        fileSystem->FreeFile( buffer.v );
         Com_Error( ERR_DROP, "LoadTGA: header too short (%s)", name );
     }
     
@@ -148,8 +149,12 @@ void idRenderSystemImageTGALocal::LoadTGA( StringEntry name, U8** pic, S32* widt
     if ( targa_header.id_length != 0 )
     {
         if ( buf_p + targa_header.id_length > end )
+        {
+            memorySystem->Free( targa_rgba );
+            fileSystem->FreeFile( buffer.v );
             Com_Error( ERR_DROP, "LoadTGA: header too short (%s)", name );
-            
+        }
+        
         buf_p += targa_header.id_length;  // skip TARGA image comment
     }
     
@@ -157,6 +162,8 @@ void idRenderSystemImageTGALocal::LoadTGA( StringEntry name, U8** pic, S32* widt
     {
         if ( buf_p + columns * rows * targa_header.pixel_size / 8 > end )
         {
+            memorySystem->Free( targa_rgba );
+            fileSystem->FreeFile( buffer.v );
             Com_Error( ERR_DROP, "LoadTGA: file truncated (%s)", name );
         }
         
