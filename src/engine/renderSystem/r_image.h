@@ -51,6 +51,47 @@
 #define WORKBLOCK_BORDER   4
 #define WORKBLOCK_REALSIZE (WORKBLOCK_SIZE + WORKBLOCK_BORDER * 2)
 
+
+typedef enum
+{
+    IMGTYPE_COLORALPHA, // for color, lightmap, diffuse, and specular
+    IMGTYPE_NORMAL,
+    IMGTYPE_NORMALHEIGHT,
+    IMGTYPE_DELUXE, // normals are swizzled, deluxe are not
+} imgType_t;
+
+typedef enum
+{
+    IMGFLAG_NONE = 0x0000,
+    IMGFLAG_MIPMAP = 0x0001,
+    IMGFLAG_PICMIP = 0x0002,
+    IMGFLAG_CUBEMAP = 0x0004,
+    IMGFLAG_NO_COMPRESSION = 0x0010,
+    IMGFLAG_NOLIGHTSCALE = 0x0020,
+    IMGFLAG_CLAMPTOEDGE = 0x0040,
+    IMGFLAG_GENNORMALMAP = 0x0100,
+    IMGFLAG_MUTABLE = 0x0200,
+    IMGFLAG_SRGB = 0x0400,
+} imgFlags_t;
+
+typedef struct image_s
+{
+    UTF8		imgName[MAX_QPATH];		// game path, including extension
+    S32			width, height;				// source image
+    S32			uploadWidth, uploadHeight;	// after power of two and picmip but not including clamp to MAX_TEXTURE_SIZE
+    U32			texnum;					// gl texture binding
+    
+    S32			frameUsed;			// for texture usage in frame statistics
+    
+    S32			internalFormat;
+    S32			TMU;				// only needed for voodoo2
+    
+    imgType_t   type;
+    S32 /*imgFlags_t*/  flags;
+    
+    struct image_s* next;
+} image_t;
+
 //
 // idRenderSystemImageLocal
 //

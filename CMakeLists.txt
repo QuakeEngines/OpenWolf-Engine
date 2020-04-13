@@ -126,7 +126,6 @@ set( RENDERSYSTEM_HEADERS
 	${MOUNT_DIR}/renderSystem/r_animation.h
 	${MOUNT_DIR}/renderSystem/r_bsp_tech3.h
 	${MOUNT_DIR}/renderSystem/r_cmds.h
-	${MOUNT_DIR}/renderSystem/r_common.h
 	${MOUNT_DIR}/renderSystem/r_curve.h
 	${MOUNT_DIR}/renderSystem/r_dsa.h
 	${MOUNT_DIR}/renderSystem/r_extensions.h

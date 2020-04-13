@@ -75,6 +75,15 @@ QGL_EXT_direct_state_access_PROCS;
 #define MAX_DRAWN_PSHADOWS    32 // do not increase past 32, because bit flags are used on surfaces
 #define PSHADOW_MAP_SIZE      512
 
+// any change in the LIGHTMAP_* defines here MUST be reflected in
+// R_FindShader() in tr_bsp.c
+#define LIGHTMAP_2D         -4	// shader is for 2D rendering
+#define LIGHTMAP_BY_VERTEX  -3	// pre-lit triangle models
+#define LIGHTMAP_WHITEIMAGE -2
+#define LIGHTMAP_NONE       -1
+
+extern vidconfig_t glConfig; // outside of TR since it shouldn't be cleared during ref re-init
+
 typedef struct cubemap_s
 {
     UTF8 name[MAX_QPATH];
@@ -1947,6 +1956,37 @@ extern	convar_t*	r_debugSort;
 extern	convar_t*	r_printShaders;
 
 extern convar_t*	r_marksOnTriangleMeshes;
+
+extern convar_t* r_stencilbits;			// number of desired stencil bits
+extern convar_t* r_depthbits;			// number of desired depth bits
+extern convar_t* r_colorbits;			// number of desired color bits, only relevant for fullscreen
+extern convar_t* r_texturebits;			// number of desired texture bits
+extern convar_t* r_ext_multisample;
+// 0 = use framebuffer depth
+// 16 = use 16-bit textures
+// 32 = use 32-bit textures
+// all else = error
+
+extern convar_t* r_customwidth;
+extern convar_t* r_customheight;
+extern convar_t* r_pixelAspect;
+extern convar_t* r_noborder;
+extern convar_t* r_fullscreen;
+extern convar_t* r_ignorehwgamma;		// overrides hardware gamma capabilities
+extern convar_t* r_drawBuffer;
+extern convar_t* r_swapInterval;
+extern convar_t* r_allowExtensions;				// global enable/disable of OpenGL extensions
+extern convar_t* r_ext_compressed_textures;		// these control use of specific extensions
+extern convar_t* r_ext_multitexture;
+extern convar_t* r_ext_compiled_vertex_array;
+extern convar_t* r_ext_texture_env_add;
+
+extern convar_t* r_ext_texture_filter_anisotropic;
+extern convar_t* r_ext_max_anisotropy;
+
+extern convar_t* r_stereoEnabled;
+
+extern	convar_t* r_saveFontData;
 
 extern convar_t* r_lensflare;
 extern convar_t* r_anamorphic;

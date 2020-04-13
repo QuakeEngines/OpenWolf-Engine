@@ -174,7 +174,6 @@ extern "C"
 
 #include <renderSystem/iqm.h>
 #include <renderSystem/r_extramath.h>
-#include <renderSystem/r_common.h>
 #include <renderSystem/r_image.h>
 #include <renderSystem/r_fbo.h>
 #include <renderSystem/r_local.h>
